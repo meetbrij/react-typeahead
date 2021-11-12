@@ -12,18 +12,11 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     textAlign: 'left',
   },
-  pageLabel: {
-    paddingTop: theme.spacing(5),
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    backgroundColor: '#e3e3e3',
-    height: '100vh'
-  },
   pageStock: {
     paddingTop: theme.spacing(5),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    backgroundColor: '#e3e3e3',
+    backgroundColor: '#fff',
     height: '100vh'
   },
 }));
@@ -40,16 +33,19 @@ const sortedStock = Stocks.sort(( a, b ) => {
 
 function Page() {
   const classes = useStyles();
-  const [stock, setStock] = useState([]);
+  const [stock, setStock] = useState('');
+  const [selectedStock, setSelectedStock] = useState([]);
   const stockList = useRef(sortedStock);
 
   const handleTypeAheadInput = e => {
     // console.log("text input: ", e);
+    setStock(e.target.value);
   }
 
   const handleTypeAheadClick = suggestedVal => {
     console.log("stock is: ", suggestedVal);
-    setStock(suggestedVal);
+    setSelectedStock([...selectedStock, suggestedVal.symbol])
+    setStock('');
   }
 
   return (
@@ -57,18 +53,20 @@ function Page() {
       <CssBaseline />
       <Container maxWidth="sm" className={classes.root}>
         <NavBar />
-          <Typography component="div" className={classes.pageLabel}>
+          <Typography component="div" className={classes.pageStock}>
             Type Ahead Component for searching stock ticker
             <TypeAhead
               key={"input"}
               options={stockList.current}
-              // value={stock}
+              value={stock}
+              startAt={0}
+              maxResult={10}
               onChange={handleTypeAheadInput}
               onClick={suggestedVal => { handleTypeAheadClick(suggestedVal)}}
               />
-              <div component="div" className={classes.pageInfo}>
+              {stock.name && <div component="div" className={classes.pageInfo}>
                 User selected {stock.name}
-              </div>
+              </div>}
           </Typography>
       </Container>
     </React.Fragment>

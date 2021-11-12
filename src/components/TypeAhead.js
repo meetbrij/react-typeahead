@@ -1,7 +1,8 @@
 import React, {useRef, useState} from 'react'
-// import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
+import List from './List';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,39 +11,34 @@ const useStyles = makeStyles((theme) => ({
       width: '55ch',
     },
   },
-  listContainer: {
-    position: 'absolute',
-    maxHeight: '400px',
-    listStyleType: 'none',
-    margin: 0,
-    padding: 0,
-    border: '1px solid lightgray',
-    zIndex: 5
-  },
-  listItem: {
-    background: 'white',
-    padding: '5px 10px',
-    cursor: 'pointer',
-    borderBottom: '1px solid lightgray',
-  },
-  stockName: {
-    fontSize: '15px',
-  },
-  stockTicker: {
+  chip: {
     fontSize: '10px',
-    color: "#646464"
+    height: '20px',
+    borderRadius: 10,
+    marginRight: 5
+  },
+  clearChip: {
+    position: 'absolute',
+    zIndex: 7,
+    top: '10px',
+    right: '5px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    color: '#6a6a6a'
   }
 }));
 
 const TypeAhead = (props) => {
 
     const classes = useStyles();
-    const {options, onChange, onClick, ...inputProps} = props;
+    const {options, maxResult, startAt, onChange, onClick, ...inputProps} = props;
 
     const [suggestions, setSuggestions] = useState([]);
-    const inputElementRef = useRef(null);
+    const [chips, setChips] = useState([])
+    const typeAheadElemRef = useRef(null);
 
     // console.log("stocks: ", options);
+    // console.log("maxResult: ", maxResult);
 
     const onInputChange = e => {
       const inputValue = e.target.value;
@@ -50,9 +46,10 @@ const TypeAhead = (props) => {
 
       if(e.target.validity.valid) {
         let result = [];
-        if(inputValue.length > 0 && options.length > 0) {
+        if(inputValue.length > startAt && options.length > 0) {
           const regex = new RegExp(`${inputValue}`,"i");
           result = options.filter(v => regex.test(v.name));
+          result = result.length > maxResult ? result.splice(0,10): result;
         }
         // console.log("result: ", result);
         setSuggestions(result);
@@ -62,9 +59,28 @@ const TypeAhead = (props) => {
 
     const suggestionSelected = suggestion => {
       setSuggestions([]);
-      console.log("suggestion selected: ", suggestion);
+      // console.log("suggestion selected: ", suggestion);
+      setChips([...chips, suggestion.symbol])
       onClick(suggestion);
+      typeAheadElemRef.current.focus();
     }
+
+    const clearChips = () => {
+      setChips([]);
+    }
+
+    // const handleKeyPress = (e) => {
+    //   console.log("keypress: ", e);
+    //   if(resultListRef.current) {
+    //     if (e.keyCode === 40) {
+    //       resultListRef.current.firstElementChild.focus();
+    //       // listRefId--;
+    //     } else if (e.keyCode === 37) {
+    //       // listRefId++;
+    //       resultListRef.current.firstElementChild().focus();
+    //     }
+    //   }
+    // }
 
     return(
       <div className={classes.root}>
@@ -72,27 +88,40 @@ const TypeAhead = (props) => {
             type="text"
             label="Search Criteria"
             onChange={onInputChange}
-            ref={inputElementRef}
+            // onKeyDown={handleKeyPress}
             autoComplete={"off"}
+            inputRef={typeAheadElemRef}
+            // multiline
+            // maxRows={4}
+            autoFocus
+            InputProps={{
+              startAdornment: chips.map((item) => (
+                <Chip
+                  key={item}
+                  label={item}
+                  className={classes.chip}
+                />
+              )),
+              endAdornment: chips.length > 0 && <div
+                className={classes.clearChip}
+                onClick={()=> clearChips()}
+                >x</div>
+            }}
             {...inputProps}
           />
           {suggestions.length > 0 && (
-            <ul className={classes.listContainer}>
-              {suggestions.map( (suggestion, idx) => {
-                // console.log(suggestion, " : ", idx)
-                return (
-                  <li
-                    key={idx}
-                    className={classes.listItem}
-                    onClick={()=> suggestionSelected(suggestion)}
-                    >
-                      <div className={classes.stockName}>{suggestion.name}</div>
-                      <div className={classes.stockTicker}>{suggestion.symbol}</div>
-                </li>)
-              })}
-            </ul>
+            <List
+              suggestions={suggestions}
+              onClick={(suggestion)=> suggestionSelected(suggestion)}
+            />
           )}
       </div>
     )
 }
+
+TypeAhead.defaultProps = {
+    startAt: 0,
+    maxResult: 10,
+}
+
 export default TypeAhead;
