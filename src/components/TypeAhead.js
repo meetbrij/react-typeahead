@@ -10,6 +10,28 @@ const useStyles = makeStyles((theme) => ({
       width: '55ch',
     },
   },
+  listContainer: {
+    position: 'absolute',
+    maxHeight: '400px',
+    listStyleType: 'none',
+    margin: 0,
+    padding: 0,
+    border: '1px solid lightgray',
+    zIndex: 5
+  },
+  listItem: {
+    background: 'white',
+    padding: '5px 10px',
+    cursor: 'pointer',
+    borderBottom: '1px solid lightgray',
+  },
+  stockName: {
+    fontSize: '15px',
+  },
+  stockTicker: {
+    fontSize: '10px',
+    color: "#646464"
+  }
 }));
 
 const TypeAhead = (props) => {
@@ -24,7 +46,7 @@ const TypeAhead = (props) => {
 
     const onInputChange = e => {
       const inputValue = e.target.value;
-      console.log("input change: ", inputValue, e.target.validity.valid);
+      // console.log("input change: ", inputValue, e.target.validity.valid);
 
       if(e.target.validity.valid) {
         let result = [];
@@ -32,17 +54,17 @@ const TypeAhead = (props) => {
           const regex = new RegExp(`${inputValue}`,"i");
           result = options.filter(v => regex.test(v.name));
         }
-        console.log("result: ", result);
+        // console.log("result: ", result);
         setSuggestions(result);
       }
-      // onChange(e);
+      onChange(e);
     }
 
-    // const suggestionSelected = suggestion => {
-    //   setSuggestions([]);
-    //   console.log("suggestion selected: ", suggestion);
-    //   onClick(suggestion);
-    // }
+    const suggestionSelected = suggestion => {
+      setSuggestions([]);
+      console.log("suggestion selected: ", suggestion);
+      onClick(suggestion);
+    }
 
     return(
       <div className={classes.root}>
@@ -55,13 +77,18 @@ const TypeAhead = (props) => {
             {...inputProps}
           />
           {suggestions.length > 0 && (
-            <ul>
+            <ul className={classes.listContainer}>
               {suggestions.map( (suggestion, idx) => {
                 // console.log(suggestion, " : ", idx)
-                return (<li
-                  key={idx}
-                  // onClick={()=> suggestionSelected(suggestion)}
-                >{suggestion.name}</li>)
+                return (
+                  <li
+                    key={idx}
+                    className={classes.listItem}
+                    onClick={()=> suggestionSelected(suggestion)}
+                    >
+                      <div className={classes.stockName}>{suggestion.name}</div>
+                      <div className={classes.stockTicker}>{suggestion.symbol}</div>
+                </li>)
               })}
             </ul>
           )}

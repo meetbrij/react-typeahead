@@ -44,7 +44,7 @@ function Page() {
   const stockList = useRef(sortedStock);
 
   const handleTypeAheadInput = e => {
-    console.log("text input: ", e);
+    // console.log("text input: ", e);
   }
 
   const handleTypeAheadClick = suggestedVal => {
@@ -67,7 +67,7 @@ function Page() {
               onClick={suggestedVal => { handleTypeAheadClick(suggestedVal)}}
               />
               <div component="div" className={classes.pageInfo}>
-                User selected {stock}
+                User selected {stock.name}
               </div>
           </Typography>
       </Container>
