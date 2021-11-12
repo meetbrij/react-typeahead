@@ -69,26 +69,12 @@ const TypeAhead = (props) => {
       setChips([]);
     }
 
-    // const handleKeyPress = (e) => {
-    //   console.log("keypress: ", e);
-    //   if(resultListRef.current) {
-    //     if (e.keyCode === 40) {
-    //       resultListRef.current.firstElementChild.focus();
-    //       // listRefId--;
-    //     } else if (e.keyCode === 37) {
-    //       // listRefId++;
-    //       resultListRef.current.firstElementChild().focus();
-    //     }
-    //   }
-    // }
-
     return(
       <div className={classes.root}>
           <TextField
             type="text"
             label="Search Criteria"
             onChange={onInputChange}
-            // onKeyDown={handleKeyPress}
             autoComplete={"off"}
             inputRef={typeAheadElemRef}
             // multiline

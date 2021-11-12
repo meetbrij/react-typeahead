@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,30 +28,25 @@ const ListItem = ({ suggestion, focus, index, setFocus, onClick }) => {
   const ref = useRef(null);
   const classes = useStyles();
 
-  // useEffect(() => {
-  //   if (focus) {
-  //     // Move element into view when it is focused
-  //     ref.current.focus();
-  //   }
-  // }, [focus]);
+  // console.log("focus: ", focus);
 
-  // const handleSelect = useCallback(() => {
-  //   console.log(`${suggestion}`);
-  //   // setting focus to that element when it is selected
-  //   // setFocus(index);
-  // // }, [suggestion, index, setFocus]);
-  // }, [suggestion]);
-
-  const handleSelect = (e) => {
-    console.log(`${e.keyCode}`);
-    // setting focus to that element when it is selected
-    // setFocus(index);
-  // }, [suggestion, index, setFocus]);
-  };
+  useEffect(() => {
+    if (focus) {
+      // Move element into view when it is focused
+      ref.current.focus();
+    }
+  }, [focus]);
 
   const handleClick = () => {
-    console.log(`${suggestion}`);
+    // console.log(`${suggestion}`);
     onClick(suggestion);
+  };
+
+  const handleKeyDown = (e) => {
+    // console.log(`${e.keyCode}`);
+    if(e.code === "Enter" || e.charCode === 13) {
+      onClick(suggestion);
+    }
   };
 
   return (
@@ -60,9 +55,9 @@ const ListItem = ({ suggestion, focus, index, setFocus, onClick }) => {
       role="button"
       ref={ref}
       className={classes.listItem}
-      onKeyDown={handleClick}
+      // onKeyDown={handleClick}
       onClick={handleClick}
-      onKeyPress={handleSelect}
+      onKeyPress={handleKeyDown}
     >
       <div className={classes.stockName}>{suggestion.name}</div>
       <div className={classes.stockTicker}>{suggestion.symbol}</div>

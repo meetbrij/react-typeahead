@@ -61,6 +61,7 @@ function Page() {
               value={stock}
               startAt={0}
               maxResult={10}
+              // inputPattern="[A-Za-z0-9]+"
               onChange={handleTypeAheadInput}
               onClick={suggestedVal => { handleTypeAheadClick(suggestedVal)}}
               />

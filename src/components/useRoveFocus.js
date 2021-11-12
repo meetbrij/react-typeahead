@@ -6,6 +6,7 @@ import {
 
 function useRoveFocus(size) {
    const [currentFocus, setCurrentFocus] = useState(0);
+   const [direction, setDirection] = useState('');
 
    const handleKeyDown = useCallback(
       e => {
@@ -13,10 +14,14 @@ function useRoveFocus(size) {
             // Down arrow
             e.preventDefault();
             setCurrentFocus(currentFocus === size - 1 ? 0 : currentFocus + 1);
+            setDirection('down');
          } else if (e.keyCode === 38) {
             // Up arrow
             e.preventDefault();
             setCurrentFocus(currentFocus === 0 ? size - 1 : currentFocus - 1);
+            setDirection('up');
+         } else {
+           setDirection('');
          }
       },
       [size, currentFocus, setCurrentFocus]
@@ -29,7 +34,7 @@ function useRoveFocus(size) {
       };
    }, [handleKeyDown]);
 
-   return [currentFocus, setCurrentFocus];
+   return [currentFocus, setCurrentFocus, direction];
 }
 
 export default useRoveFocus;

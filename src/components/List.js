@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme) => ({
 
 const List = (props) => {
   const {suggestions, onClick} = props;
-  const [focus, setFocus] = useRoveFocus(suggestions.length);
+  const [focus, setFocus, direction] = useRoveFocus(suggestions.length);
   const classes = useStyles();
+
+  // console.log("currentFocus: ", focus);
 
   return (
     <ul className={classes.listContainer}>
@@ -27,7 +29,7 @@ const List = (props) => {
           key={index}
           setFocus={setFocus}
           index={index}
-          focus={focus === index}
+          focus={focus === index && direction !== ''}
           suggestion={suggestion}
           onClick={()=> onClick(suggestion)}
         />
