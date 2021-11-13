@@ -2,10 +2,33 @@ const lightTheme = {
     palette: {
       type: 'light',
       primary: {
-        main: '#171e3d',
+        main: '#171e3d'
       },
       secondary: {
         main: '#f50057',
+      },
+      custom: {
+        hover: '#eee',
+        border: '#eee',
+        text: '#666',
+        hoverText: '#222',
+      }
+    },
+    overrides: {
+      MuiInputLabel: {
+        root: {
+          '&$focused': {
+            color: '#171e3d',
+            fontWeight: "bold"
+          },
+        },
+      },
+      MuiInput: {
+        underline: {
+          '&:after': {
+            borderBottomColor: '#171e3d',
+          },
+        }
       }
     },
     typography: {

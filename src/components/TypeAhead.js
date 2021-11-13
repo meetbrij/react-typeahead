@@ -6,10 +6,11 @@ import List from './List';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& > *': {
-      marginTop: theme.spacing(3),
-      width: '70%',
-    },
+
+  },
+  textfield: {
+    marginTop: theme.spacing(3),
+    width: '70%',
   },
   chip: {
     fontSize: '10px',
@@ -80,6 +81,7 @@ const TypeAhead = (props) => {
             autoComplete={"off"}
             inputRef={typeAheadElemRef}
             autoFocus
+            className={classes.textfield}
             inputProps={{
               pattern: inputPattern
             }}

@@ -4,23 +4,25 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   listItem: {
     // background: 'white',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
+    color: theme.palette.custom.text,
     "&:hover, &:focus": {
-      backgroundColor: '#eee'
+      backgroundColor: theme.palette.custom.hover,
+      color: theme.palette.custom.hoverText
     },
     "&:active": {
-      backgroundColor: '#eee'
+      backgroundColor: theme.palette.custom.hover,
+      color: theme.palette.custom.hoverText
     },
     padding: '5px 10px',
     cursor: 'pointer',
-    borderBottom: '1px solid lightgray',
+    borderBottom: `1px solid ${theme.palette.custom.border}`,
   },
   stockName: {
     fontSize: '15px',
   },
   stockTicker: {
     fontSize: '10px',
-    color: "#646464"
   }
 }));
 

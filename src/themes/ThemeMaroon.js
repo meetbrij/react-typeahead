@@ -6,6 +6,29 @@ const darkTheme = {
       },
       secondary: {
         main: '#f5a900',
+      },
+      custom: {
+        hover: '#888',
+        text: '#f5a900',
+        hoverText: '#eee',
+        border: '#888'
+      }
+    },
+    overrides: {
+      MuiInputLabel: {
+        root: {
+          '&$focused': {
+            color: '#f5a900',
+            fontWeight: "bold"
+          },
+        },
+      },
+      MuiInput: {
+        underline: {
+          '&:after': {
+            borderBottomColor: '#f5a900',
+          },
+        }
       }
     },
     typography: {

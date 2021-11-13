@@ -10,7 +10,9 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: 0,
     border: '1px solid lightgray',
-    zIndex: 5
+    zIndex: 5,
+    marginTop: theme.spacing(1),
+    width: '70%',
   }
 }));
 
