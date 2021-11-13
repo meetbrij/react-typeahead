@@ -32,7 +32,7 @@ const darkTheme = {
       }
     },
     typography: {
-      fontSize: 16,
+      fontSize: 14,
       h3: {
         fontWeight: 700,
         fontSize: '2.2rem'

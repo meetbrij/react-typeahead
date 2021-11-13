@@ -20,8 +20,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    // backgroundColor: '#fff',
     height: '100vh'
+  },
+  pageInfo: {
+    paddingTop: theme.spacing(3)
   },
 }));
 
@@ -56,13 +58,23 @@ function Page() {
   });
 
   const handleTypeAheadInput = userInputValue => {
-    // console.log("text input: ", e);
     setStock(userInputValue);
   }
 
-  const handleTypeAheadClick = suggestedVal => {
+  const handleTypeAheadClick = (suggestedVal, chips, type) => {
     console.log("stock is: ", suggestedVal);
-    setSelectedStock([...selectedStock, suggestedVal.symbol])
+    // if(chips !== undefined) {
+    if(type === "multiSelect") {
+      setSelectedStock(chips);
+      setStock('');
+    } else {
+      setSelectedStock([...selectedStock, suggestedVal.symbol]);
+      setStock(suggestedVal.name);
+    }
+  }
+
+  const handleClear = () => {
+    setSelectedStock([]);
     setStock('');
   }
 
@@ -80,11 +92,13 @@ function Page() {
             startAt={0}
             maxResult={10}
             inputPattern="[A-Za-z]+"
-            onChange={handleTypeAheadInput}
-            onClick={suggestedVal => { handleTypeAheadClick(suggestedVal)}}
+            type="multiSelect"
+            onTextChange={handleTypeAheadInput}
+            onChange={(suggestedVal, chips, type) => { handleTypeAheadClick(suggestedVal, chips, type)}}
+            onClear={handleClear}
             />
-            {stock.name && <div component="div" className={classes.pageInfo}>
-              User selected {stock.name}
+            {selectedStock.length > 0 && <div component="div" className={classes.pageInfo}>
+              User selection: {selectedStock.map(stock => <span>{stock}, </span>)}
             </div>}
         </Typography>
       </Container>

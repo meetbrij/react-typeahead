@@ -5,9 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import List from './List';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-
-  },
+  root: {},
   textfield: {
     marginTop: theme.spacing(3),
     width: '70%',
@@ -21,9 +19,18 @@ const useStyles = makeStyles((theme) => ({
   clearChip: {
     position: 'absolute',
     zIndex: 7,
-    top: '10px',
+    top: '7px',
     right: '5px',
-    fontSize: '16px',
+    fontSize: '17px',
+    cursor: 'pointer',
+    color: '#6a6a6a'
+  },
+  clearText: {
+    position: 'absolute',
+    zIndex: 7,
+    top: '7px',
+    right: '5px',
+    fontSize: '17px',
     cursor: 'pointer',
     color: '#6a6a6a'
   }
@@ -32,18 +39,38 @@ const useStyles = makeStyles((theme) => ({
 const TypeAhead = (props) => {
 
     const classes = useStyles();
-    const {options, maxResult, startAt, onChange, onClick, inputPattern, ...textfieldProps} = props;
+    const {options, maxResult, startAt, onChange, onTextChange, onClear, inputPattern, type, ...textfieldProps} = props;
 
     const [suggestions, setSuggestions] = useState([]);
     const [chips, setChips] = useState([]);
-    const [textFieldInputValue, setTextFieldInputValue] = useState([]);
+    const [textFieldInputValue, setTextFieldInputValue] = useState('');
     const typeAheadElemRef = useRef(null);
 
+    const adornment = type === "singleSelect" ?
+    {
+        endAdornment: textFieldInputValue.length > 0 && <div
+        className={classes.clearText}
+        onClick={()=> handleClear()}
+        >x</div>
+    } : {
+        startAdornment: chips.map((item) => (
+          <Chip
+            key={item}
+            label={item}
+            className={classes.chip}
+          />
+        )),
+        endAdornment: chips.length > 0 && <div
+          className={classes.clearChip}
+          onClick={()=> handleClear()}
+          >x</div>
+    };
+
     // console.log("stocks: ", options);
-    // console.log("maxResult: ", maxResult);
+    // console.log("type: ", type);
 
     const onInputChange = e => {
-      console.log("input change: ", e.target.value, e.target.validity.valid);
+      // console.log("input change: ", e.target.value, e.target.validity.valid);
       const inputValue = e.target.validity.valid ? e.target.value : textFieldInputValue;
 
       if(e.target.validity.valid) {
@@ -57,19 +84,23 @@ const TypeAhead = (props) => {
         setSuggestions(result);
         setTextFieldInputValue(inputValue);
       }
-      onChange(inputValue);
+      onTextChange(inputValue);
     }
 
     const suggestionSelected = suggestion => {
       setSuggestions([]);
       // console.log("suggestion selected: ", suggestion);
-      setChips([...chips, suggestion.symbol])
-      onClick(suggestion);
+      if(type === "multiSelect") {
+        setChips([...chips, suggestion.symbol]);
+      }
+      onChange(suggestion, chips, type);
       typeAheadElemRef.current.focus();
     }
 
-    const clearChips = () => {
+    const handleClear = () => {
       setChips([]);
+      onClear('', []);
+      typeAheadElemRef.current.focus();
     }
 
     return(
@@ -82,23 +113,12 @@ const TypeAhead = (props) => {
             inputRef={typeAheadElemRef}
             autoFocus
             className={classes.textfield}
+            multiline
+            maxRows={4}
             inputProps={{
               pattern: inputPattern
             }}
-            InputProps={{
-              pattern: inputPattern,
-              startAdornment: chips.map((item) => (
-                <Chip
-                  key={item}
-                  label={item}
-                  className={classes.chip}
-                />
-              )),
-              endAdornment: chips.length > 0 && <div
-                className={classes.clearChip}
-                onClick={()=> clearChips()}
-                >x</div>
-            }}
+            InputProps={adornment}
             {...textfieldProps}
           />
           {suggestions.length > 0 && (
@@ -114,7 +134,8 @@ const TypeAhead = (props) => {
 TypeAhead.defaultProps = {
     startAt: 0,
     maxResult: 10,
-    inputPattern: "[A-Za-z0-9]+"
+    inputPattern: "[A-Za-z0-9]+",
+    type: "singleSelect"
 }
 
 export default TypeAhead;
