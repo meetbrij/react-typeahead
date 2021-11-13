@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    height: '100vh'
+    height: '100vh',
   },
   pageInfo: {
     paddingTop: theme.spacing(3)

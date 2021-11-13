@@ -116,7 +116,8 @@ const TypeAhead = (props) => {
             multiline
             maxRows={4}
             inputProps={{
-              pattern: inputPattern
+              pattern: inputPattern,
+              "data-testid": "text-field-search",
             }}
             InputProps={adornment}
             {...textfieldProps}

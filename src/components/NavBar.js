@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,15 +20,17 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = () => {
     const classes = useStyles();
+    const [themeClass, setThemeClass] = useState('light')
 
     const handleSelectPageTheme = (theme) => {
       const event = new CustomEvent("themeSelect", { detail: theme });
+      setThemeClass(theme);
       document.dispatchEvent(event);
     }
 
     return(
         <div className={classes.root}>
-          <AppBar position="static">
+          <AppBar position="static" data-testid="menu-section" className={themeClass}>
             <Toolbar variant="dense">
               <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                 <MenuIcon />
@@ -42,6 +44,7 @@ const NavBar = () => {
                   size="medium"
                   edge="end"
                   aria-label="dark theme for the page"
+                  data-testid="dark"
                   onClick={() => handleSelectPageTheme('dark')}
                   color="inherit"
                 >
@@ -51,6 +54,7 @@ const NavBar = () => {
                   size="medium"
                   edge="end"
                   aria-label="light theme for the page"
+                  data-testid="light"
                   onClick={() => handleSelectPageTheme('light')}
                   color="inherit"
                 >

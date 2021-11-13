@@ -24,7 +24,7 @@ const List = (props) => {
   // console.log("currentFocus: ", focus);
 
   return (
-    <ul className={classes.listContainer}>
+    <ul className={classes.listContainer} data-testid="list-container">
       {suggestions.map((suggestion, index) => (
         <Item
           key={index}
