@@ -3,6 +3,7 @@
 This TypeAhead POC was creating React JS and relies on Material UI for styling. It has the following features:
 - Single and MultiSelect feature
 - Restricts user from entering special characters
+- Supports Dark and Light theme
 - Supports keyboard navigation using up and down arrow key
 - Supports maxResult property to set the maximum property on typeahead output
 - Supports startAt property to set the starting point for typeahead search to trigger

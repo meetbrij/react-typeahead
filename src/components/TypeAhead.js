@@ -113,6 +113,7 @@ const TypeAhead = (props) => {
             inputRef={typeAheadElemRef}
             autoFocus
             className={classes.textfield}
+            aria-label="TypeAhead component"
             // multiline
             // maxRows={4}
             inputProps={{
