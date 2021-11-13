@@ -5,6 +5,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/MenuBook';
+import Box from '@mui/material/Box';
+import DarkMode from '@mui/icons-material/DarkMode';
+import LightMode from '@mui/icons-material/LightMode';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +21,11 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = () => {
     const classes = useStyles();
 
+    const handleSelectPageTheme = (theme) => {
+      const event = new CustomEvent("themeSelect", { detail: theme });
+      document.dispatchEvent(event);
+    }
+
     return(
         <div className={classes.root}>
           <AppBar position="static">
@@ -28,6 +36,27 @@ const NavBar = () => {
               <Typography variant="h6" color="inherit">
                 React Type Ahead Component Demo
               </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box>
+                <IconButton
+                  size="medium"
+                  edge="end"
+                  aria-label="dark theme for the page"
+                  onClick={() => handleSelectPageTheme('dark')}
+                  color="inherit"
+                >
+                  <DarkMode />
+                </IconButton>
+                <IconButton
+                  size="medium"
+                  edge="end"
+                  aria-label="light theme for the page"
+                  onClick={() => handleSelectPageTheme('light')}
+                  color="inherit"
+                >
+                  <LightMode />
+                </IconButton>
+              </Box>
             </Toolbar>
           </AppBar>
         </div>

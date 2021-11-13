@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       marginTop: theme.spacing(3),
-      width: '55ch',
+      width: '70%',
     },
   },
   chip: {
@@ -31,18 +31,19 @@ const useStyles = makeStyles((theme) => ({
 const TypeAhead = (props) => {
 
     const classes = useStyles();
-    const {options, maxResult, startAt, onChange, onClick, ...inputProps} = props;
+    const {options, maxResult, startAt, onChange, onClick, inputPattern, ...textfieldProps} = props;
 
     const [suggestions, setSuggestions] = useState([]);
-    const [chips, setChips] = useState([])
+    const [chips, setChips] = useState([]);
+    const [textFieldInputValue, setTextFieldInputValue] = useState([]);
     const typeAheadElemRef = useRef(null);
 
     // console.log("stocks: ", options);
     // console.log("maxResult: ", maxResult);
 
     const onInputChange = e => {
-      const inputValue = e.target.value;
-      // console.log("input change: ", inputValue, e.target.validity.valid);
+      console.log("input change: ", e.target.value, e.target.validity.valid);
+      const inputValue = e.target.validity.valid ? e.target.value : textFieldInputValue;
 
       if(e.target.validity.valid) {
         let result = [];
@@ -53,8 +54,9 @@ const TypeAhead = (props) => {
         }
         // console.log("result: ", result);
         setSuggestions(result);
+        setTextFieldInputValue(inputValue);
       }
-      onChange(e);
+      onChange(inputValue);
     }
 
     const suggestionSelected = suggestion => {
@@ -78,7 +80,11 @@ const TypeAhead = (props) => {
             autoComplete={"off"}
             inputRef={typeAheadElemRef}
             autoFocus
+            inputProps={{
+              pattern: inputPattern
+            }}
             InputProps={{
+              pattern: inputPattern,
               startAdornment: chips.map((item) => (
                 <Chip
                   key={item}
@@ -91,7 +97,7 @@ const TypeAhead = (props) => {
                 onClick={()=> clearChips()}
                 >x</div>
             }}
-            {...inputProps}
+            {...textfieldProps}
           />
           {suggestions.length > 0 && (
             <List
@@ -106,6 +112,7 @@ const TypeAhead = (props) => {
 TypeAhead.defaultProps = {
     startAt: 0,
     maxResult: 10,
+    inputPattern: "[A-Za-z0-9]+"
 }
 
 export default TypeAhead;

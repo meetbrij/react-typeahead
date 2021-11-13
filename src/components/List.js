@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   listContainer: {
-    position: 'absolute',
     listStyleType: 'none',
     margin: 0,
     padding: 0,

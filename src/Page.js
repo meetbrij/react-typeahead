@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import NavBar from './components/NavBar';
 import TypeAhead from './components/TypeAhead';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -6,6 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Stocks from './data/Stocks'
+import { ThemeProvider } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
+import lightTheme from './themes/ThemeNavy';
+import darkTheme from './themes/ThemeMaroon';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     height: '100vh'
   },
 }));
@@ -36,10 +40,24 @@ function Page() {
   const [stock, setStock] = useState('');
   const [selectedStock, setSelectedStock] = useState([]);
   const stockList = useRef(sortedStock);
+  const [userTheme, setUserTheme] = useState('light')
 
-  const handleTypeAheadInput = e => {
+  const selectTheme = ({ detail }) => {
+    setUserTheme(detail);
+  };
+
+  const appliedTheme = createTheme(userTheme === "light" ? lightTheme : darkTheme)
+
+  useEffect(() => {
+    document.addEventListener("themeSelect", selectTheme);
+    return () => {
+      document.removeEventListener("themeSelect", selectTheme);
+    }
+  });
+
+  const handleTypeAheadInput = userInputValue => {
     // console.log("text input: ", e);
-    setStock(e.target.value);
+    setStock(userInputValue);
   }
 
   const handleTypeAheadClick = suggestedVal => {
@@ -49,28 +67,28 @@ function Page() {
   }
 
   return (
-    <React.Fragment>
+    <ThemeProvider theme={appliedTheme}>
       <CssBaseline />
-      <Container maxWidth="sm" className={classes.root}>
+      <Container maxWidth="md" className={classes.root}>
         <NavBar />
-          <Typography component="div" className={classes.pageStock}>
-            Type Ahead Component for searching stock ticker
-            <TypeAhead
-              key={"input"}
-              options={stockList.current}
-              value={stock}
-              startAt={0}
-              maxResult={10}
-              // inputPattern="[A-Za-z0-9]+"
-              onChange={handleTypeAheadInput}
-              onClick={suggestedVal => { handleTypeAheadClick(suggestedVal)}}
-              />
-              {stock.name && <div component="div" className={classes.pageInfo}>
-                User selected {stock.name}
-              </div>}
-          </Typography>
+        <Typography component="div" className={classes.pageStock}>
+          Type Ahead Component for searching stock ticker
+          <TypeAhead
+            key={"input"}
+            options={stockList.current}
+            value={stock}
+            startAt={0}
+            maxResult={10}
+            inputPattern="[A-Za-z]+"
+            onChange={handleTypeAheadInput}
+            onClick={suggestedVal => { handleTypeAheadClick(suggestedVal)}}
+            />
+            {stock.name && <div component="div" className={classes.pageInfo}>
+              User selected {stock.name}
+            </div>}
+        </Typography>
       </Container>
-    </React.Fragment>
+    </ThemeProvider>
   );
 }
 
