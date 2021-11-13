@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from "axios";
 import Stocks from './data/Stocks'
 import { ThemeProvider } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core/styles';
@@ -15,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     textAlign: 'left',
+  },
+  pageLoading: {
+    paddingTop: theme.spacing(5),
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    fontSize: '20px'
   },
   pageStock: {
     paddingTop: theme.spacing(5),
@@ -42,13 +49,40 @@ function Page() {
   const [stock, setStock] = useState('');
   const [selectedStock, setSelectedStock] = useState([]);
   const stockList = useRef(sortedStock);
-  const [userTheme, setUserTheme] = useState('light')
+  const [userTheme, setUserTheme] = useState('light');
+  const [stockPayload, setStockPayload] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
 
   const selectTheme = ({ detail }) => {
     setUserTheme(detail);
   };
 
-  const appliedTheme = createTheme(userTheme === "light" ? lightTheme : darkTheme)
+  const appliedTheme = createTheme(userTheme === "light" ? lightTheme : darkTheme);
+
+  useEffect(() => {
+      setLoading(true);
+      axios.get('https://financialmodelingprep.com/api/v3/search?query=&exchange=NASDAQ&apikey=10a735a05c9ce986e3263629cb5aa061')
+          .then(response => {
+            let sortedStockPayload = response.data.sort(( a, b ) => {
+              if ( a.symbol < b.symbol ){
+                return -1;
+              }
+              if ( a.symbol > b.symbol ){
+                return 1;
+              }
+              return 0;
+            });
+            setStockPayload(sortedStockPayload);
+            console.log('payload: ', sortedStockPayload);
+            setLoading(false);
+            setLoadingError(null);
+          })
+          .catch(err => {
+            setLoading(false);
+            setLoadingError(err);
+          });
+  }, []);
 
   useEffect(() => {
     document.addEventListener("themeSelect", selectTheme);
@@ -85,9 +119,10 @@ function Page() {
         <NavBar />
         <Typography component="div" className={classes.pageStock}>
           Type Ahead Component for searching stock ticker
-          <TypeAhead
+          {!loading ? <TypeAhead
             key={"input"}
-            options={stockList.current}
+            // options={stockList.current}
+            options={stockPayload}
             value={stock}
             startAt={0}
             maxResult={10}
@@ -96,7 +131,8 @@ function Page() {
             onTextChange={handleTypeAheadInput}
             onChange={(suggestedVal, chips, type) => { handleTypeAheadClick(suggestedVal, chips, type)}}
             onClear={handleClear}
-            />
+            /> : <div className={classes.pageLoading}>Page loading...</div>}
+
             {selectedStock.length > 0 && <div component="div" className={classes.pageInfo}>
               User selection: {selectedStock.map(stock => <span>{stock}, </span>)}
             </div>}

@@ -113,8 +113,8 @@ const TypeAhead = (props) => {
             inputRef={typeAheadElemRef}
             autoFocus
             className={classes.textfield}
-            multiline
-            maxRows={4}
+            // multiline
+            // maxRows={4}
             inputProps={{
               pattern: inputPattern,
               "data-testid": "text-field-search",
