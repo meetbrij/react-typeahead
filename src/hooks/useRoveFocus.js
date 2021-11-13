@@ -5,7 +5,7 @@ import {
 } from "react";
 
 function useRoveFocus(size) {
-   const [currentFocus, setCurrentFocus] = useState(0);
+   const [currentFocus, setCurrentFocus] = useState(-1);
    const [direction, setDirection] = useState('');
 
    const handleKeyDown = useCallback(

@@ -77,8 +77,6 @@ const TypeAhead = (props) => {
             onChange={onInputChange}
             autoComplete={"off"}
             inputRef={typeAheadElemRef}
-            // multiline
-            // maxRows={4}
             autoFocus
             InputProps={{
               startAdornment: chips.map((item) => (

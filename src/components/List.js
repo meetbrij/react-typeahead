@@ -1,6 +1,6 @@
 import React from "react";
 import Item from "./ListItem";
-import useRoveFocus from "./useRoveFocus";
+import useRoveFocus from "../hooks/useRoveFocus";
 // import characters from "./onePunchManCharacters";
 import { makeStyles } from '@material-ui/core/styles';
 
