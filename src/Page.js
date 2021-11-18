@@ -102,7 +102,7 @@ function Page() {
       setSelectedStock(chips);
       setStock('');
     } else {
-      setSelectedStock([...selectedStock, suggestedVal.symbol]);
+      setSelectedStock([...selectedStock, suggestedVal.name]);
       setStock(suggestedVal.name);
     }
   }
@@ -128,13 +128,14 @@ function Page() {
             maxResult={10}
             inputPattern="[A-Za-z]+"
             type="multiSelect"
+            // type="singleSelect"
             onTextChange={handleTypeAheadInput}
             onChange={(suggestedVal, chips, type) => { handleTypeAheadClick(suggestedVal, chips, type)}}
             onClear={handleClear}
             /> : <div className={classes.pageLoading}>Page loading...</div>}
 
             {selectedStock.length > 0 && <div component="div" className={classes.pageInfo}>
-              User selection: {selectedStock.map(stock => <span>{stock}, </span>)}
+              User selection: {selectedStock.join(",")}
             </div>}
         </Typography>
       </Container>

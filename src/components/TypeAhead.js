@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,7 +41,8 @@ const TypeAhead = (props) => {
     const classes = useStyles();
     const {options, maxResult, startAt, onChange, onTextChange, onClear, inputPattern, type, ...textfieldProps} = props;
 
-    const [suggestions, setSuggestions] = useState([]);
+    const [suggestions, setSuggestions] = useState([]); // result list of suggestions
+    const [suggestion, setSuggestion] = useState([]); // user selected suggestion
     const [chips, setChips] = useState([]);
     const [textFieldInputValue, setTextFieldInputValue] = useState('');
     const typeAheadElemRef = useRef(null);
@@ -69,6 +70,11 @@ const TypeAhead = (props) => {
     // console.log("stocks: ", options);
     // console.log("type: ", type);
 
+    useEffect(() => {
+      console.log("use effect chips")
+      onChange(suggestion, chips, "multiSelect");
+    },[chips]);
+
     const onInputChange = e => {
       // console.log("input change: ", e.target.value, e.target.validity.valid);
       const inputValue = e.target.validity.valid ? e.target.value : textFieldInputValue;
@@ -89,11 +95,16 @@ const TypeAhead = (props) => {
 
     const suggestionSelected = suggestion => {
       setSuggestions([]);
+      // setSuggestion(suggestion)
       // console.log("suggestion selected: ", suggestion);
       if(type === "multiSelect") {
         setChips([...chips, suggestion.symbol]);
+      } else {
+        onChange(suggestion, chips, type);
       }
-      onChange(suggestion, chips, type);
+      // onChange(suggestion, chips, type);
+
+
       typeAheadElemRef.current.focus();
     }
 
